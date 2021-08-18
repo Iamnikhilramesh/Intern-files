@@ -95,6 +95,26 @@ if option is not None and days is not None and future_past is not None and y is 
         st.pyplot()
     else:
         print("Date is not correct")
-
+    #Streamlit app deatils
+    st.title('Which city has most sales from the selected event')
+    j = 0
+    data = []
+    data = pd.DataFrame(data)
+    if future_past == "Future":
+        for i in event_data.Date:
+            d = datetime.datetime.strptime(i,'%Y-%m-%d')  + datetime.timedelta(days=(days))
+            data = data.append(orders[(orders['Date'] > str(i)) & (orders['Date'] < str(d))])
+            j = j+1
+        data.bill_city.value_counts().head(10).plot.barh(rot=0)
+        st.pyplot()
+    elif future_past == 'Past':
+        for i in event_data.Date:
+            d = datetime.datetime.strptime(i,'%Y-%m-%d')  + datetime.timedelta(days=(-1*days))
+            data = data.append(orders[(orders['Date'] > str(d)) & (orders['Date'] < str(i))])
+            j = j+1
+        data.bill_city.value_counts().head(10).plot.barh(rot=0)
+        st.pyplot()
+    else:
+        print("Date is not correct")
 else:
     st.write("Please select the the inputs")
